@@ -146,41 +146,6 @@ internal class FileChecker {
   }
   
   /**
-   Uses fopen() to check if an file exists and attempts to open it, in either Read-Only or Read-Write mode.
-   - Parameters:
-   - path: The file path to open.
-   - mode: Determines if the file will be opened in Writable or Read-Only mode.
-   - returns: Returns nil, if the file does not exist. Returns true if it can be opened with the given mode.
-   */
-  static func checkExistenceOfSuspiciousFilesViaFOpen(path: String,
-                                                      mode: FileMode) -> CheckResult? {
-    // the 'a' or 'w' modes, create the file if it does not exist.
-    let mode: String = FileMode.writable == mode ? "r+" : "r"
-    
-    if let filePointer: UnsafeMutablePointer<FILE> = fopen(path, mode) {
-      fclose(filePointer)
-      return (false, "Suspicious file exists: \(path)")
-    } else {
-      return nil
-    }
-  }
-  
-  /**
-   Uses stat() to check if a file exists.
-   - returns: Returns nil, if stat() returns a non-zero result code.
-   */
-  static func checkExistenceOfSuspiciousFilesViaStat(path: String) -> CheckResult? {
-    var statbuf: stat = stat()
-    let resultCode = stat((path as NSString).fileSystemRepresentation, &statbuf)
-    
-    if resultCode == 0 {
-      return (false, "Suspicious file exists: \(path)")
-    } else {
-      return nil
-    }
-  }
-  
-  /**
    Uses access() to check whether the calling process can access the file path, in either Read-Only or Write mode.
    - Parameters:
    - path: The file path to open.

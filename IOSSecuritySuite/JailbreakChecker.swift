@@ -201,13 +201,6 @@ internal class JailbreakChecker {
     for path in paths {
       if FileManager.default.fileExists(atPath: path) {
         return (false, "Suspicious file exists: \(path)")
-      } else if let result = FileChecker.checkExistenceOfSuspiciousFilesViaStat(path: path) {
-        return result
-      } else if let result = FileChecker.checkExistenceOfSuspiciousFilesViaFOpen(
-        path: path,
-        mode: .readable
-      ) {
-        return result
       } else if let result = FileChecker.checkExistenceOfSuspiciousFilesViaAccess(
         path: path,
         mode: .readable
@@ -241,11 +234,6 @@ internal class JailbreakChecker {
     for path in paths {
       if FileManager.default.isReadableFile(atPath: path) {
         return (false, "Suspicious file can be opened: \(path)")
-      } else if let result = FileChecker.checkExistenceOfSuspiciousFilesViaFOpen(
-        path: path,
-        mode: .writable
-      ) {
-        return result
       } else if let result = FileChecker.checkExistenceOfSuspiciousFilesViaAccess(
         path: path,
         mode: .writable
